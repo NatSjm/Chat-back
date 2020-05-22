@@ -6,10 +6,14 @@ module.exports = {
       name: 'Admin',
       email: 'admin@chat91.com',
       password: 'adminuser',
+      createdAt: new Date(),
+      updatedAt: new Date()
     }, {
       name: 'Manager',
       email: 'manager@chat91.com',
       password: 'manageruser',
+      createdAt: new Date(),
+      updatedAt: new Date()
     }], {});
   },
 
