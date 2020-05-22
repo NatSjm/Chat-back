@@ -16,10 +16,18 @@ module.exports = {
           UserId: {
             type: Sequelize.INTEGER,
             primaryKey: true,
+            // references: {
+            //   model: 'Users',
+            //   key: 'id',
+            // },
           },
-          TagId: {
+          DialogId: {
             type: Sequelize.INTEGER,
             primaryKey: true,
+            // references: {
+            //   model: 'Dialogs',
+            //   key: 'id',
+            // },
           },
         }
     );
