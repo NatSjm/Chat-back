@@ -10,7 +10,7 @@ const {
 	Dialog: DialogModel,
 	UserDialog: UserDialogModel, 
 } = require('../models');
-const { dialog: dialogResponse } = require('../responses');
+const { dialogOne: dialogOneResponse } = require('../responses');
 
 module.exports = async (req, res) => {
 	let { name, users } = req.body;
@@ -37,7 +37,7 @@ module.exports = async (req, res) => {
 				});
 			}, 0);
 		});
-		res.json(dialogResponse(dialog, users));
+		res.json(dialogOneResponse(dialog, users));
 	}
 	catch (err) {
 		res.json(modelError(err));

@@ -11,7 +11,7 @@ const {
 	Dialog: DialogModel,
 	UserDialog: UserDialogModel, 
 } = require('../models');
-const { dialog: dialogResponse } = require('../responses');
+const { dialogOne: dialogOneResponse } = require('../responses');
 
 module.exports = async (req, res) => {
 	let { id } = req.params;
@@ -69,7 +69,7 @@ module.exports = async (req, res) => {
 			step++;
 		}
 
-		res.json(dialogResponse(dialog, users));
+		res.json(dialogOneResponse(dialog, users));
 	}
 	catch (err) {
 		res.json(modelError(err));

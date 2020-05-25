@@ -4,7 +4,7 @@ const {
 	model: modelError, 
 } = require('../errors');
 const { Dialog: DialogModel } = require('../models');
-const { dialog: dialogResponse } = require('../responses');
+const { dialogOne: dialogOneResponse } = require('../responses');
 
 module.exports = async (req, res) => {
 	let { id } = req.params;
@@ -25,7 +25,7 @@ module.exports = async (req, res) => {
 			}, 
 		});
 
-		res.json(dialogResponse(item));
+		res.json(dialogOneResponse(item));
 	}
 	catch (err) {
 		res.json(modelError(err));
