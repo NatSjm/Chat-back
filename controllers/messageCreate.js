@@ -7,7 +7,7 @@ const {
 	model: modelError, 
 } = require('../errors');
 const { Message: MessageModel } = require('../models');
-const { message: messageResponse } = require('../responses');
+const { messageOne: messageOneResponse } = require('../responses');
 
 module.exports = async (req, res) => {
 	let { user_id: userId, dialog_id: dialogId, body } = req.body;
@@ -30,7 +30,7 @@ module.exports = async (req, res) => {
 			body, 
 		});
 
-		res.json(messageResponse(message));
+		res.json(messageOneResponse(message));
 	}
 	catch (err) {
 		res.json(modelError(err));
