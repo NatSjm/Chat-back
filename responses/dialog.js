@@ -1,5 +1,5 @@
 
-const dialog = (modelData = {}) => {
+const dialog = (modelData = {}, users) => {
 	return modelData;
 };
 

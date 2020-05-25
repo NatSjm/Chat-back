@@ -1,17 +1,24 @@
-const { string: stringValidate } = require('../validators');
+const { 
+	string: stringValidate,
+	json: jsonValidate, 
+} = require('../validators');
 const { 
 	validate: validateError, 
 	model: modelError, 
 } = require('../errors');
-const { Dialog: DialogModel } = require('../models');
+const { 
+	Dialog: DialogModel,
+	UserDialog: UserDialogModel, 
+} = require('../models');
 const { dialog: dialogResponse } = require('../responses');
 
 module.exports = async (req, res) => {
-	let { name, email, password } = req.body;
+	let { name, users } = req.body;
 
 	// parse request data
 	try {
 		name = stringValidate(name);
+		users = jsonValidate(users);
 	}
 	catch (err) {
 		res.json(validateError(err));
@@ -19,9 +26,18 @@ module.exports = async (req, res) => {
 
 	// query to db
 	try {
-		const item = await DialogModel.create({ name });
+		const dialog = await DialogModel.create({ name });
 
-		res.json(dialogResponse(item));
+		users.forEach((id, i) => {
+			const _id = id;
+			setTimeout(() => {
+				UserDialogModel.create({ 
+					dialogId: dialog.id,
+					userId: _id,
+				});
+			}, 0);
+		});
+		res.json(dialogResponse(dialog, users));
 	}
 	catch (err) {
 		res.json(modelError(err));

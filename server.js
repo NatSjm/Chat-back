@@ -11,7 +11,6 @@ app
 	.use(bodyParser.json())
 	.use(bodyParser.raw())
 	.get('/dialogs/:id', controllers.dialogGetOne)
-	.get('/dialogs', controllers.dialogGetMany)
 	.post('/dialogs', controllers.dialogCreate)
 	.patch('/dialogs/:id', controllers.dialogUpdate)
 	.delete('/dialogs/:id', controllers.dialogDelete)

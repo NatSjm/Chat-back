@@ -4,7 +4,7 @@ const {
 	model: modelError, 
 } = require('../errors');
 const { User: UserModel } = require('../models');
-const { user: userResponse } = require('../responses');
+const { userOne: userOneResponse } = require('../responses');
 
 module.exports = async (req, res) => {
 	let { id } = req.params;
@@ -25,7 +25,7 @@ module.exports = async (req, res) => {
 			}, 
 		});
 
-		res.json(userResponse(item));
+		res.json(userOneResponse(item));
 	}
 	catch (err) {
 		res.json(modelError(err));
