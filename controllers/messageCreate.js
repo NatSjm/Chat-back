@@ -9,8 +9,8 @@ const {
 const { Message: MessageModel } = require('../models');
 const { messageOne: messageOneResponse } = require('../responses');
 
-module.exports = async (req, res) => {
-	let { user_id: userId, dialog_id: dialogId, body } = req.body;
+module.exports = (io) => async (req, res) => {
+	let { user_id: userId, dialog_id: dialogId, body, id } = req.body;
 
 	// parse request data
 	try {
@@ -29,6 +29,17 @@ module.exports = async (req, res) => {
 			dialogId, 
 			body, 
 		});
+
+		Object.keys(io.sockets.connected)
+			.forEach((key) => {
+				const _key = key;
+
+				setTimeout(() => {
+					if (id !== _key) {
+						io.sockets.connected[_key].emit('messages', messageOneResponse(message));
+					}
+				}, 0);
+			});
 
 		res.json(messageOneResponse(message));
 	}

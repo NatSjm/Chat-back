@@ -3,15 +3,15 @@ const { model: modelError } = require('../errors');
 const { Message: MessageModel } = require('../models');
 const { messageMany: messageManyResponse } = require('../responses');
 
-module.exports = async (req, res) => {
-	let { dialog_id: dialogId } = req.query;
+module.exports = (socket) => async (msg) => {
+	let { dialogId } = msg;
 
 	// parse request data
 	try {
 		dialogId = numberValidate(dialogId);
 	}
 	catch (err) {
-		res.json(validateError(err));
+		socket.emit('error', validateError(err));
 	}
 
 	// query to db
@@ -22,10 +22,12 @@ module.exports = async (req, res) => {
 			},
 		});
 
-		res.json(messageManyResponse(items));
+		socket.emit('messages', messageManyResponse(items));
 	}
 	catch (err) {
-		res.json(modelError(err));
+		socket.emit('error', modelError(err));
 	}
+
+	return {};
 };
 

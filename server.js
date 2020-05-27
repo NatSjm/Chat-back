@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const controllers = require('./controllers');
 const app = express();
 const cors = require('cors');
+const io = require('socket.io')(parseInt(process.env.SOCKET_PORT));
 
 app
 	.use(cors())
@@ -17,11 +18,16 @@ app
 	.post('/dialogs', controllers.dialogCreate)
 	.patch('/dialogs/:id', controllers.dialogUpdate)
 	.delete('/dialogs/:id', controllers.dialogDelete)
-	.get('/messages', controllers.messageGetMany)
-	.post('/messages/', controllers.messageCreate)
+	.post('/messages/', controllers.messageCreate(io))
 	.patch('/messages/:id', controllers.messageUpdate)
 	.delete('/messages/:id', controllers.messageDelete)
 	.get('/users/:id', controllers.userGetOne)
 	.get('/users/', controllers.userGetMany);
 
-app.listen(4444);
+app.listen(parseInt(process.env.HTTP_PORT));
+
+io.on('connection', (socket) => {
+	setTimeout(async () => {
+		socket.on('messages', controllers.messageGetMany(socket));
+	}, 0);
+});
