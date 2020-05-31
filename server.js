@@ -13,6 +13,8 @@ app
 	.use(bodyParser.urlencoded({ extended: true }))
 	.use(bodyParser.json())
 	.use(bodyParser.raw())
+	.post('/users/', controllers.userCreate)
+	.get('/login/', controllers.userLogin)
 	.get('/dialogs/:id', controllers.dialogGetOne)
 	.get('/dialogs', controllers.dialogGetMany)
 	.post('/dialogs', controllers.dialogCreate)
