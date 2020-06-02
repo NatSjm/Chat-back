@@ -6,15 +6,20 @@ const bodyParser = require('body-parser');
 const controllers = require('./controllers');
 const app = express();
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const io = require('socket.io')(parseInt(process.env.SOCKET_PORT));
+const { auth } = require('./middlewares');
 
 app
 	.use(cors())
+	.use(cookieParser())
 	.use(bodyParser.urlencoded({ extended: true }))
 	.use(bodyParser.json())
 	.use(bodyParser.raw())
 	.post('/users/', controllers.userCreate)
 	.get('/login/', controllers.userLogin)
+	.put('/refresh/', controllers.tokensRefresh)
+	.use(auth)
 	.get('/dialogs/:id', controllers.dialogGetOne)
 	.get('/dialogs', controllers.dialogGetMany)
 	.post('/dialogs', controllers.dialogCreate)

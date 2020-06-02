@@ -51,7 +51,9 @@ module.exports = async (req, res) => {
 		const accessToken = open +'.'+ secretAccessToken;
 		const refreshToken = open +'.'+ secretRefreshToken;
 
-		res.json(userOneResponse(user, accessToken, refreshToken));
+		res.cookie('accessToken', accessToken);
+		res.cookie('refreshToken', refreshToken);
+		res.json(userOneResponse(user));
 	}
 	catch (err) {
 		res.json(modelError(err));

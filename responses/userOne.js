@@ -1,10 +1,6 @@
 
-const userOne = (modelData = {}, accessToken, refreshToken) => {
-	return {
-		...modelData.dataValues,
-		accessToken,
-		refreshToken,
-	};
+const userOne = (modelData = {}) => {
+	return modelData.dataValues;
 };
 
 module.exports = userOne;
