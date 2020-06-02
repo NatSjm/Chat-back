@@ -10,7 +10,7 @@ const { Message: MessageModel } = require('../models');
 const { messageOne: messageOneResponse } = require('../responses');
 
 module.exports = (io) => async (req, res) => {
-	let { user_id: userId, dialog_id: dialogId, body, id } = req.body;
+	let { user_id: userId, dialog_id: dialogId, body } = req.body;
 
 	// parse request data
 	try {

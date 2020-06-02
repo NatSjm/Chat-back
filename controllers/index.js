@@ -9,6 +9,9 @@ const messageDelete = require('./messageDelete.js');
 const messageGetMany = require('./messageGetMany.js');
 const userGetOne = require('./userGetOne.js');
 const userGetMany = require('./userGetMany.js');
+const userLogin = require('./userLogin.js');
+const userCreate = require('./userCreate.js');
+const tokensRefresh = require('./tokensRefresh.js');
 
 module.exports = {
 	dialogCreate,
@@ -22,4 +25,7 @@ module.exports = {
 	messageGetMany,
 	userGetMany,
 	userGetOne,
+	userLogin,
+	userCreate,
+	tokensRefresh,
 };
