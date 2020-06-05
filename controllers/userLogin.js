@@ -37,27 +37,33 @@ const _generate = (email) => {
 };
 
 module.exports = async (req, res) => {
-	let { email, password, refreshToken } = req.query;
+	let { refreshToken } = req.cookies;
+	let { email, password } = req.query;
 	let tokens,
 		realEmail;
 
 	// parse request data
 	try {
-		email = stringValidate(email);
-		password = stringValidate(password);
+		email && (email = stringValidate(email));
+		password && (password = stringValidate(password));
 
 		if (refreshToken) {
 			refreshToken = stringValidate(refreshToken);
 		}
 	}
 	catch (err) {
+		console.log('err', err)
+
 		res.json(validateError(err));
 	}
 
 	if (refreshToken) {
+		let payloadRefreshToken = {};
+
 		try {
 			const splitRefreshToken = refreshToken.split('.');
-			const payloadRefreshToken = JSON.parse(base64url.decode(splitRefreshToken[1]));
+
+			payloadRefreshToken = JSON.parse(base64url.decode(splitRefreshToken[1]));
 			const cache = await redis().get(`${payloadRefreshToken.email}:refreshToken`);
 
 			if (cache !== refreshToken) {
@@ -67,6 +73,7 @@ module.exports = async (req, res) => {
 		catch (err) {
 			return res.json(modelError('tokens are not exists'));
 		}
+
 		tokens = _generate(payloadRefreshToken.email);
 		realEmail = payloadRefreshToken.email;
 	}
