@@ -18,7 +18,6 @@ app
 	.use(bodyParser.raw())
 	.post('/users/', controllers.userCreate)
 	.get('/login/', controllers.userLogin)
-	.put('/refresh/', controllers.tokensRefresh)
 	.use(auth)
 	.get('/dialogs/:id', controllers.dialogGetOne)
 	.get('/dialogs', controllers.dialogGetMany)

@@ -11,9 +11,9 @@ const { messageOne: messageOneResponse } = require('../responses');
 
 module.exports = async (req, res) => {
 	const now = Date.now();
-	const { accessToken, refreshToken } = req.cookies;
+	let { accessToken, refreshToken } = req.cookies;
 	let payloadAccessToken,
-		payloadRefreshToken,
+		payloadRefreshToken;
 
 	// parse request data
 	try {

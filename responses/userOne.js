@@ -1,6 +1,6 @@
 
-const userOne = (modelData = {}) => {
-	return modelData.dataValues;
+const userOne = (tokens = {}) => {
+	return tokens;
 };
 
 module.exports = userOne;

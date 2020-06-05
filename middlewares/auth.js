@@ -1,7 +1,8 @@
 const base64url = require('base64url');
 const { model: modelError } = require('../errors');
+const redis = require('../redis');
 
-const auth = (req, res, next) => {
+const auth = async (req, res, next) => {
 	const now = Date.now();
 	const { accessToken } = req.cookies;
 
@@ -20,7 +21,13 @@ const auth = (req, res, next) => {
 			.json(modelError((new Error('access token is expired'))));
 	}
 
-	next();
+	if (await redis().get(`${payload.email}:accessToken`) === accessToken) {
+		return next();
+	}
+
+	return res
+		.status(401)
+		.json(modelError((new Error('access token is error'))));
 };
 
 module.exports = auth;
