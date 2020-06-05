@@ -6,7 +6,7 @@ const {
 	model: modelError, 
 } = require('../errors');
 const { User: UserModel } = require('../models');
-const { userOne: userOneResponse } = require('../responses');
+const { userLogin: userLoginResponse } = require('../responses');
 const redis = require('../redis');
 
 const _generate = (email) => {
@@ -82,11 +82,12 @@ module.exports = async (req, res) => {
 					password: hash,
 				}, 
 			});
+
 			tokens = _generate(user.email);
 			realEmail = email;
 		}
 		catch (err) {
-			return res.json(modelError(err));
+			return res.json(modelError(new Error('login data is error')));
 		}
 	}
 
@@ -96,6 +97,14 @@ module.exports = async (req, res) => {
 	redis().expire(`${realEmail}:accessToken`, 300000);
 	redis().expire(`${realEmail}:refreshToken`, 600000);
 
-	res.json(userOneResponse(tokens));
+	res.cookie('accessToken', tokens.accessToken, {
+		maxAge: 300000,
+		domain: 'localhost',
+	});
+	res.cookie('refreshToken', tokens.refreshToken, {
+		maxAge: 600000,
+		domain: 'localhost',
+	});
+	res.json(userLoginResponse(tokens));
 };
 
