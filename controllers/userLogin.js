@@ -6,7 +6,7 @@ const {
 	model: modelError, 
 } = require('../errors');
 const { User: UserModel } = require('../models');
-const { userOne: userOneResponse } = require('../responses');
+const { userLogin: userLoginResponse } = require('../responses');
 const redis = require('../redis');
 
 const _generate = (email) => {
@@ -43,21 +43,26 @@ module.exports = async (req, res) => {
 
 	// parse request data
 	try {
-		email = stringValidate(email);
-		password = stringValidate(password);
+		email && (email = stringValidate(email));
+		password && (password = stringValidate(password));
 
 		if (refreshToken) {
 			refreshToken = stringValidate(refreshToken);
 		}
 	}
 	catch (err) {
+		console.log('err', err)
+
 		res.json(validateError(err));
 	}
 
 	if (refreshToken) {
+		let payloadRefreshToken = {};
+
 		try {
 			const splitRefreshToken = refreshToken.split('.');
-			const payloadRefreshToken = JSON.parse(base64url.decode(splitRefreshToken[1]));
+
+			payloadRefreshToken = JSON.parse(base64url.decode(splitRefreshToken[1]));
 			const cache = await redis().get(`${payloadRefreshToken.email}:refreshToken`);
 
 			if (cache !== refreshToken) {
@@ -67,6 +72,7 @@ module.exports = async (req, res) => {
 		catch (err) {
 			return res.json(modelError('tokens are not exists'));
 		}
+
 		tokens = _generate(payloadRefreshToken.email);
 		realEmail = payloadRefreshToken.email;
 	}
@@ -82,11 +88,12 @@ module.exports = async (req, res) => {
 					password: hash,
 				}, 
 			});
+
 			tokens = _generate(user.email);
 			realEmail = email;
 		}
 		catch (err) {
-			return res.json(modelError(err));
+			return res.json(modelError(new Error('login data is error')));
 		}
 	}
 
@@ -96,6 +103,14 @@ module.exports = async (req, res) => {
 	redis().expire(`${realEmail}:accessToken`, 300000);
 	redis().expire(`${realEmail}:refreshToken`, 600000);
 
-	res.json(userOneResponse(tokens));
+	res.cookie('accessToken', tokens.accessToken, {
+		maxAge: 300000,
+		domain: 'localhost',
+	});
+	res.cookie('refreshToken', tokens.refreshToken, {
+		maxAge: 600000,
+		domain: 'localhost',
+	});
+	res.json(userLoginResponse(tokens));
 };
 

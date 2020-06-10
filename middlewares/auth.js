@@ -4,7 +4,7 @@ const redis = require('../redis');
 
 const auth = async (req, res, next) => {
 	const now = Date.now();
-	const { accessToken } = req.cookies;
+	const { accessToken } = req.query;
 
 	if (!accessToken) {
 		return res
