@@ -11,14 +11,7 @@ const io = require('socket.io')(parseInt(process.env.SOCKET_PORT));
 const { auth } = require('./middlewares');
 
 app
-	.use(cors({
-		'allowedHeaders': ['sessionId', 'Content-Type'],
-		'exposedHeaders': ['sessionId'],
-		'origin': 'http://127.0.0.1:3000',
-		'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-		'preflightContinue': false,
-		'credentials': true,
-	}))
+	.use(cors())
 	.use(cookieParser())
 	.use(bodyParser.urlencoded({ extended: true }))
 	.use(bodyParser.json())

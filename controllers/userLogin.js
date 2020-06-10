@@ -37,8 +37,7 @@ const _generate = (email) => {
 };
 
 module.exports = async (req, res) => {
-	let { refreshToken } = req.cookies;
-	let { email, password } = req.query;
+	let { email, password, refreshToken } = req.query;
 	let tokens,
 		realEmail;
 
