@@ -7,6 +7,7 @@ const controllers = require('./controllers');
 const app = express();
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const fileUpload = require('express-fileupload');
 const io = require('socket.io')(parseInt(process.env.SOCKET_PORT));
 const { auth } = require('./middlewares');
 
@@ -16,8 +17,13 @@ app
 	.use(bodyParser.urlencoded({ extended: true }))
 	.use(bodyParser.json())
 	.use(bodyParser.raw())
+	.use(fileUpload({
+		useTempFiles: true,
+		tempFileDir: process.env.TEMP_FILE_DIR,
+	}))
 	.post('/users/', controllers.userCreate)
 	.get('/login/', controllers.userLogin)
+	.post('/upload', controllers.upload)
 	.use(auth)
 	.get('/dialogs/:id', controllers.dialogGetOne)
 	.get('/dialogs', controllers.dialogGetMany)

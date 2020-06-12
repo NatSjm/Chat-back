@@ -12,6 +12,7 @@ const userGetMany = require('./userGetMany.js');
 const userLogin = require('./userLogin.js');
 const userCreate = require('./userCreate.js');
 const tokensRefresh = require('./tokensRefresh.js');
+const upload = require('./upload.js');
 
 module.exports = {
 	dialogCreate,
@@ -28,4 +29,5 @@ module.exports = {
 	userLogin,
 	userCreate,
 	tokensRefresh,
+	upload,
 };
