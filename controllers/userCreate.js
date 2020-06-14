@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 const { string: stringValidate } = require('../validators');
 const { 
 	validate: validateError, 
@@ -38,6 +39,21 @@ module.exports = async (req, res) => {
 		});
 
 		res.json(userOneResponse(user));
+
+		const transporter = nodemailer.createTransport({
+			host: 'smtp.gmail.com',
+			port: 587,
+			secure: false,
+			auth: {
+				user: 'testchat91@gmail.com',
+				pass: 'helloWORLD+1',
+			},
+		});
+		const info = transporter.sendMail({
+			to: 'ihor.bielchenko@gmail.com',
+			subject: 'Hello',
+			text: 'Example text',
+		});
 	}
 	catch (err) {
 		res.json(modelError(err));

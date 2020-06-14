@@ -53,7 +53,9 @@ module.exports = async (req, res) => {
 	catch (err) {
 		console.log('err', err)
 
-		res.json(validateError(err));
+		res
+			.status(401)
+			.json(validateError(err));
 	}
 
 	if (refreshToken) {
@@ -66,11 +68,15 @@ module.exports = async (req, res) => {
 			const cache = await redis().get(`${payloadRefreshToken.email}:refreshToken`);
 
 			if (cache !== refreshToken) {
-				return res.json(modelError('user is not auth'));
+				return res
+					.status(401)
+					.json(modelError('user is not auth'));
 			}
 		}
 		catch (err) {
-			return res.json(modelError('tokens are not exists'));
+			return res
+				.status(401)
+				.json(modelError('tokens are not exists'));
 		}
 
 		tokens = _generate(payloadRefreshToken.email);
@@ -93,7 +99,9 @@ module.exports = async (req, res) => {
 			realEmail = email;
 		}
 		catch (err) {
-			return res.json(modelError(new Error('login data is error')));
+			return res
+				.status(401)
+				.json(modelError(new Error('login data is error')));
 		}
 	}
 
