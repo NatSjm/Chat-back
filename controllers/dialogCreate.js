@@ -1,14 +1,14 @@
-const { 
+const {
 	string: stringValidate,
-	json: jsonValidate, 
+	json: jsonValidate,
 } = require('../validators');
-const { 
-	validate: validateError, 
-	model: modelError, 
+const {
+	validate: validateError,
+	model: modelError,
 } = require('../errors');
-const { 
+const {
 	Dialog: DialogModel,
-	UserDialog: UserDialogModel, 
+	UserDialog: UserDialogModel,
 } = require('../models');
 const { dialogOne: dialogOneResponse } = require('../responses');
 
@@ -18,7 +18,8 @@ module.exports = async (req, res) => {
 	// parse request data
 	try {
 		name = stringValidate(name);
-		users = jsonValidate(users);
+		//console.log(users);
+		//users = jsonValidate(users);
 	}
 	catch (err) {
 		res.json(validateError(err));
@@ -31,12 +32,13 @@ module.exports = async (req, res) => {
 		users.forEach((id, i) => {
 			const _id = id;
 			setTimeout(() => {
-				UserDialogModel.create({ 
+				UserDialogModel.create({
 					dialogId: dialog.id,
 					userId: _id,
 				});
 			}, 0);
 		});
+
 		res.json(dialogOneResponse(dialog, users));
 	}
 	catch (err) {

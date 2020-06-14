@@ -1,16 +1,16 @@
-const { 
+const {
 	string: stringValidate,
-	number: numberValidate, 
+	number: numberValidate,
 } = require('../validators');
-const { 
-	validate: validateError, 
-	model: modelError, 
+const {
+	validate: validateError,
+	model: modelError,
 } = require('../errors');
 const { Message: MessageModel } = require('../models');
 const { messageOne: messageOneResponse } = require('../responses');
 
 module.exports = (io) => async (req, res) => {
-	let { user_id: userId, dialog_id: dialogId, body } = req.body;
+	let { user_id: userId, dialog_id: dialogId, body, id } = req.body;
 
 	// parse request data
 	try {
@@ -24,10 +24,10 @@ module.exports = (io) => async (req, res) => {
 
 	// query to db
 	try {
-		const message = await MessageModel.create({ 
-			userId, 
-			dialogId, 
-			body, 
+		const message = await MessageModel.create({
+			userId,
+			dialogId,
+			body,
 		});
 
 		Object.keys(io.sockets.connected)
@@ -35,12 +35,12 @@ module.exports = (io) => async (req, res) => {
 				const _key = key;
 
 				setTimeout(() => {
+					//console.log('_key', _key)
 					if (id !== _key) {
 						io.sockets.connected[_key].emit('messages', messageOneResponse(message));
 					}
 				}, 0);
 			});
-
 		res.json(messageOneResponse(message));
 	}
 	catch (err) {
