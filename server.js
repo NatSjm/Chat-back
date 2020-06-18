@@ -1,6 +1,7 @@
 'use strict';
 require('dotenv').config();
 
+const schedule = require('node-schedule');
 const express = require('express');
 const bodyParser = require('body-parser');
 const controllers = require('./controllers');
@@ -42,4 +43,8 @@ io.on('connection', (socket) => {
 	setTimeout(async () => {
 		socket.on('messages', controllers.messageGetMany(socket));
 	}, 0);
+});
+
+schedule.scheduleJob('* * * * *', () => {
+	console.log('CRON!')
 });

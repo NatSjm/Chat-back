@@ -1,6 +1,6 @@
 
 const userOne = (modelData = {}) => {
-	return modelData;
+	return modelData.dataValues;
 };
 
 module.exports = userOne;

@@ -7,5 +7,5 @@ module.exports = (sequelize, DataTypes) => {
   UserDialog.associate = function(models) {
     // associations can be defined here
   };
-  return UserDialog;
+    return UserDialog;
 };

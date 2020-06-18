@@ -39,7 +39,7 @@ module.exports = async (req, res) => {
 		});
 
 		res.json(userOneResponse(user));
-
+		
 		const transporter = nodemailer.createTransport({
 			host: 'smtp.gmail.com',
 			port: 587,
