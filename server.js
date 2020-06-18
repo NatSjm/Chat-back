@@ -27,7 +27,7 @@ app
 	.use(auth)
 	.get('/dialogs/:id', controllers.dialogGetOne)
 	.get('/dialogs', controllers.dialogGetMany)
-	.post('/dialogs', controllers.dialogCreate)
+	.post('/dialogs', controllers.dialogCreate(io))
 	.patch('/dialogs/:id', controllers.dialogUpdate)
 	.delete('/dialogs/:id', controllers.dialogDelete)
 	.post('/messages/', controllers.messageCreate(io))

@@ -1,9 +1,9 @@
 const crypto = require('crypto');
 const base64url = require('base64url');
 const { string: stringValidate } = require('../validators');
-const { 
-	validate: validateError, 
-	model: modelError, 
+const {
+	validate: validateError,
+	model: modelError,
 } = require('../errors');
 const { User: UserModel } = require('../models');
 const { userLogin: userLoginResponse } = require('../responses');
@@ -44,6 +44,7 @@ module.exports = async (req, res) => {
 	// parse request data
 	try {
 		email && (email = stringValidate(email));
+
 		password && (password = stringValidate(password));
 
 		if (refreshToken) {
@@ -88,11 +89,11 @@ module.exports = async (req, res) => {
 			const hash = crypto.createHmac('sha256', process.env.PASSWORD_KEY)
 				.update(password)
 				.digest('hex');
-			const user = await UserModel.findOne({ 
+			const user = await UserModel.findOne({
 				where: {
 					email,
 					password: hash,
-				}, 
+				},
 			});
 
 			tokens = _generate(user.email);

@@ -6,6 +6,7 @@ module.exports = async (req, res) => {
 	// query to db
 	try {
 		const items = await UserModel.findAll({
+			order: [['name']],
 			attributes: {
 				exclude: [ 'password' ]
 			}

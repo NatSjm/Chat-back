@@ -5,7 +5,7 @@ const { dialogMany: dialogManyResponse } = require('../responses');
 module.exports = async (req, res) => {
 	// query to db
 	try {
-		const items = await DialogModel.findAll();
+		const items = await DialogModel.findAll({order: [['createdAt']]});
 
 		res.json(dialogManyResponse(items));
 	}
