@@ -1,3 +1,5 @@
+const {sequelize} = require('../models');
+
 const {
 	string: stringValidate,
 	number: numberValidate,
@@ -6,7 +8,7 @@ const {
 	validate: validateError,
 	model: modelError,
 } = require('../errors');
-const { Message: MessageModel } = require('../models');
+const { Message: MessageModel, Dialog: DialogModel} = require('../models');
 const { messageOne: messageOneResponse } = require('../responses');
 
 module.exports = (io) => async (req, res) => {
@@ -29,6 +31,9 @@ module.exports = (io) => async (req, res) => {
 			body,
 		});
 
+		const messageCreated = new Date().toISOString().slice(0, 19).replace('T', ' ');
+		const newDialog = await sequelize.query('UPDATE dialogs SET updatedAt = "' + messageCreated + '" WHERE id = "' + dialogId + '"');
+
 		Object.keys(io.sockets.connected)
 			.forEach((key) => {
 				const _key = key;
@@ -43,6 +48,7 @@ module.exports = (io) => async (req, res) => {
 		res.json(messageOneResponse(message));
 	}
 	catch (err) {
+//		console.log('hhhhhhh', err);
 		res.json(modelError(err));
 	}
 };

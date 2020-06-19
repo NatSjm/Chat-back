@@ -1,13 +1,15 @@
 const { model: modelError } = require('../errors');
-const { Dialog: DialogModel } = require('../models');
+const { Dialog: DialogModel, Message: MessageModel } = require('../models');
 const { dialogMany: dialogManyResponse } = require('../responses');
 
 module.exports = async (req, res) => {
-	console.log('req.sessionID', req.session)
+	//console.log('req.sessionID', req.session);
 
 	// query to db
 	try {
-		const items = await DialogModel.findAll({order: [['createdAt']]});
+		const items = await DialogModel.findAll({
+			 order: [['updatedAt', 'DESC']]
+		});
 
 		res.json(dialogManyResponse(items));
 	}

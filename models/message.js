@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     body: DataTypes.TEXT
   }, {});
   Message.associate = function(models) {
-    // associations can be defined here
+    Message.belongsTo(models.Dialog);
   };
   return Message;
 };

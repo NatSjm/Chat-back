@@ -45,6 +45,6 @@ io.on('connection', (socket) => {
 	}, 0);
 });
 
-schedule.scheduleJob('* * * * *', () => {
-	console.log('CRON!')
-});
+// schedule.scheduleJob('* * * * *', () => {
+// 	console.log('CRON!')
+// });
