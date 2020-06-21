@@ -21,6 +21,12 @@ module.exports = (socket) => async (msg) => {
 				dialogId,
 			},
 		});
+		//console.log(socket.rooms);
+		Object.keys(socket.rooms).filter((r) => r != socket.id)
+			.forEach((r) => socket.leave(r));
+		setTimeout(() => {
+			socket.join(dialogId);
+		});
 
 		socket.emit('messages', messageManyResponse(items));
 	}

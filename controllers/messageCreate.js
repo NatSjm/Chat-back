@@ -1,4 +1,4 @@
-const {sequelize} = require('../models');
+//const {sequelize} = require('../models');
 
 const {
 	string: stringValidate,
@@ -12,8 +12,8 @@ const { Message: MessageModel, Dialog: DialogModel} = require('../models');
 const { messageOne: messageOneResponse } = require('../responses');
 
 module.exports = (io) => async (req, res) => {
-	let { user_id: userId, dialog_id: dialogId, body, id } = req.body;
-	// parse request data
+	let { user_id: userId, dialog_id: dialogId, body, socketId } = req.body;
+
 	try {
 		userId = numberValidate(userId);
 		dialogId = numberValidate(dialogId);
@@ -31,24 +31,24 @@ module.exports = (io) => async (req, res) => {
 			body,
 		});
 
-		const messageCreated = new Date().toISOString().slice(0, 19).replace('T', ' ');
-		const newDialog = await sequelize.query('UPDATE dialogs SET updatedAt = "' + messageCreated + '" WHERE id = "' + dialogId + '"');
-
-		Object.keys(io.sockets.connected)
-			.forEach((key) => {
-				const _key = key;
-
-				setTimeout(() => {
-					//console.log('_key', _key)
-					if (id !== _key) {
-						io.sockets.connected[_key].emit('messages', messageOneResponse(message));
-					}
-				}, 0);
-			});
+		// Object.keys(io.sockets.connected)
+		// 	.forEach((key) => {
+		// 		const _key = key;
+		//
+		// 		setTimeout(() => {
+		// 			//console.log('_key', _key)
+		// 			if (socketId !== _key) {
+		// 				io.sockets.connected[_key].emit('messages', messageOneResponse(message));
+		// 			}
+		// 		}, 0);
+		// 	});
+		// console.log(socketId);
+		// console.log('jjjjj',io.sockets.connected[socketId]);
+		io.sockets.connected[socketId].broadcast.to(dialogId).emit('messages', messageOneResponse(message));
 		res.json(messageOneResponse(message));
 	}
 	catch (err) {
-//		console.log('hhhhhhh', err);
+		console.log('hhhhhhh', err);
 		res.json(modelError(err));
 	}
 };

@@ -22,6 +22,7 @@ const auth = async (req, res, next) => {
 	}
 
 	if (await redis().get(`${payload.email}:accessToken`) === accessToken) {
+		req.userEmail = payload.email;
 		return next();
 	}
 

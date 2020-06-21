@@ -5,7 +5,8 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     password: DataTypes.STRING
   }, {});
-  User.associate = function(models) {  	
+  User.associate = function(models) {
+    User.belongsToMany(models.Dialog, {through: 'UserDialogs'});
     // associations can be defined here
   };
   return User;
