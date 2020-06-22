@@ -13,7 +13,7 @@ const { messageOne: messageOneResponse } = require('../responses');
 
 module.exports = (io) => async (req, res) => {
 	let { user_id: userId, dialog_id: dialogId, body, socketId } = req.body;
-
+         // console.log(socketId);
 	try {
 		userId = numberValidate(userId);
 		dialogId = numberValidate(dialogId);

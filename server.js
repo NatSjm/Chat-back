@@ -55,10 +55,6 @@ io.on('connect', (socket) => {
 		socket.on('disconnect', () => redisRemover(socket.id));
 	}, 0);
 
-	// socket.on('disconnect', () => {
-	// 	console.log('jjjjj', socket.id);
-	// 	redisRemover(socket.id);
-	// });
 });
 
 
@@ -69,60 +65,29 @@ io.on('connect', (socket) => {
 // });
 const redisSetter = async ({accessToken}, socketId) => {
 	//console.log(accessToken, socketId);
-	if (accessToken || socketId) {
+	if (accessToken && socketId) {
 
 		const split = accessToken.split('.');
 		const payload = JSON.parse(base64url.decode(split[1]));
 		const userEmail = payload.email;
-
 		await redis().set(`${userEmail}:socketId`, socketId);
 		redis().set(`${socketId}`, userEmail);
-		let uemail = await redis().get(socketId);
-		console.log(uemail);
-		const rk = await redis().get(`${uemail}:socketId`);
-		console.log(rk);
+		// let uemail = await redis().get(socketId);
+		// console.log(uemail);
+		// const rk = await redis().get(`${uemail}:socketId`);
+		// console.log(rk);
 	}else{
 		console.log('no accessTocken or socketId');
 	}
 };
 
-
-
 const redisRemover = async(socketId) => {
 	let userEmail =  await redis().get(socketId);
-
 	await redis().del(`${userEmail}:socketId`);
 	await redis().del(socketId);
-
-
-
-	console.log('done')
+	//console.log('done');
 };
 
 
 
-// const { accessToken } = req.query;
-//
-// if (!accessToken) {
-// 	return res
-// 		.status(401)
-// 		.json(modelError((new Error('access token is empty'))));
-// }
-//
-// const split = accessToken.split('.');
-// const payload = JSON.parse(base64url.decode(split[1]));
-//
-// if (now - 300000 > payload.iat) {
-// 	return res
-// 		.status(401)
-// 		.json(modelError((new Error('access token is expired'))));
-// }
-//
-// if (await redis().get(`${payload.email}:accessToken`) === accessToken) {
-// 	return next();
-// }
-//
-// return res
-// 	.status(401)
-// 	.json(modelError((new Error('access token is error'))));
-// };
+
