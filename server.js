@@ -40,11 +40,24 @@ app
 	.get('/users/:id', controllers.userGetOne)
 	.get('/users/', controllers.userGetMany);
 
-app.listen(parseInt(process.env.HTTP_PORT));
+app.listen(parseInt(process.env.HTTP_PORT), () => {
+	redis().keys('*:socketId').then(function (keys) {
+		let pipeline = redis().pipeline();
+		keys.forEach(function (key) {
+			pipeline.del(key);
+		});
+		return pipeline.exec();
+	});
+	redis().keys('socket_*').then(function (keys) {
+		let pipeline = redis().pipeline();
+		keys.forEach(function (key) {
+			pipeline.del(key);
+		});
+		return pipeline.exec();
+	});
+});
 
 io.on('connect', (socket) => {
-	//console.log('-------------------------', socket.id);
-
 	setTimeout(async () => {
 		socket.on('messages', controllers.messageGetMany(socket));
 	}, 0);
@@ -66,28 +79,22 @@ io.on('connect', (socket) => {
 const redisSetter = async ({accessToken}, socketId) => {
 	//console.log(accessToken, socketId);
 	if (accessToken && socketId) {
-
 		const split = accessToken.split('.');
 		const payload = JSON.parse(base64url.decode(split[1]));
 		const userEmail = payload.email;
-		await redis().set(`${userEmail}:socketId`, socketId);
-		redis().set(`${socketId}`, userEmail);
-		// let uemail = await redis().get(socketId);
-		// console.log(uemail);
-		// const rk = await redis().get(`${uemail}:socketId`);
-		// console.log(rk);
+		 redis().set(`${userEmail}:socketId`, socketId);
+		 redis().set(`socket_${socketId}`, userEmail);
 	}else{
 		console.log('no accessTocken or socketId');
 	}
 };
 
 const redisRemover = async(socketId) => {
-	let userEmail =  await redis().get(socketId);
+	let userEmail =  await redis().get(`socket_${socketId}`);
 	await redis().del(`${userEmail}:socketId`);
-	await redis().del(socketId);
-	//console.log('done');
+	await redis().del(`socket_${socketId}`);
+	console.log('done');
 };
-
 
 
 

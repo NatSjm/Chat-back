@@ -1,5 +1,3 @@
-//const {sequelize} = require('../models');
-
 const {
 	string: stringValidate,
 	number: numberValidate,
@@ -8,7 +6,7 @@ const {
 	validate: validateError,
 	model: modelError,
 } = require('../errors');
-const { Message: MessageModel, Dialog: DialogModel} = require('../models');
+const { Message: MessageModel} = require('../models');
 const { messageOne: messageOneResponse } = require('../responses');
 
 module.exports = (io) => async (req, res) => {
