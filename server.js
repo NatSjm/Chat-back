@@ -93,7 +93,7 @@ const redisRemover = async(socketId) => {
 	let userEmail =  await redis().get(`socket_${socketId}`);
 	await redis().del(`${userEmail}:socketId`);
 	await redis().del(`socket_${socketId}`);
-	console.log('done');
+	//console.log('done');
 };
 
 

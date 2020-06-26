@@ -6,14 +6,15 @@ const {
 	validate: validateError,
 	model: modelError,
 } = require('../errors');
-const { Message: MessageModel} = require('../models');
+const { Message: MessageModel, User: UserModel} = require('../models');
 const { messageOne: messageOneResponse } = require('../responses');
 
 module.exports = (io) => async (req, res) => {
-	let { user_id: userId, dialog_id: dialogId, body, socketId } = req.body;
-         // console.log(socketId);
+	let { dialog_id: dialogId, body, socketId } = req.body;
+	const userEmail = req.userEmail;
+
 	try {
-		userId = numberValidate(userId);
+		//userId = numberValidate(userId);
 		dialogId = numberValidate(dialogId);
 		body = stringValidate(body);
 	}
@@ -23,8 +24,14 @@ module.exports = (io) => async (req, res) => {
 
 	// query to db
 	try {
+		const user = await UserModel.findOne({
+			where: {
+				email: userEmail
+			},
+		});
+
 		const message = await MessageModel.create({
-			userId,
+			userId: user.id,
 			dialogId,
 			body,
 		});
